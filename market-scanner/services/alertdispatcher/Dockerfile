@@ -13,5 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # copy app
 COPY app.py .
 
+# copy shared library
+COPY ../../shared ./shared
+
 # use entrypoint
-CMD ['python', 'app.py']
+CMD ["python", "app.py"]
