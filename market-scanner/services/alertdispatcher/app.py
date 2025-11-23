@@ -1,0 +1,31 @@
+import redis
+import json
+import os
+
+def load_secret(path):
+    with open(path, "r") as f:
+        return f.read().strip()
+
+REDIS_PASSWORD = load_secret("/run/secrets/redis_password")
+
+redis_client = redis.Redis(
+    host=os.getenv("REDIS_HOST", "redis"),
+    port=6379,
+    password=REDIS_PASSWORD,
+    decode_responses=True
+)
+
+def main():
+    print("alertdispatcher: listening for alerts")
+
+    while True:
+        item = redis_client.blpop("signals", timeout=5)
+        if not item:
+            break
+
+        _, raw = item
+        alert = json.loads(raw)
+        print(f"ALERT: {alert['ticker']} dropped {alert['drop_pct']:.2f}%")
+
+if __name__ == "__main__":
+    main()
