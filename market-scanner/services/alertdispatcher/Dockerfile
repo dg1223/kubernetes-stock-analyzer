@@ -7,14 +7,14 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 
 # install dependencies
-COPY services/alertdispatcher/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # copy app
-COPY services/alertdispatcher/app.py .
+COPY app.py .
 
 # copy shared library
-COPY shared ./shared
+COPY ../../shared ./shared
 
 # use entrypoint
 CMD ["python", "app.py"]
