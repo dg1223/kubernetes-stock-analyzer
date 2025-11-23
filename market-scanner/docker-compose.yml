@@ -1,71 +1,105 @@
 services:
   redis:
-    image: redis:7
+    image: redis:7-alpine
+    container_name: redis
     command: ["redis-server", "--requirepass", "/run/secrets/redis_password"]
-    secrets:
-      - redis_password
     ports:
       - "6379:6379"
+    secrets:
+      - redis_password
+    networks:
+      - market-net
 
   postgres:
-    image: postgres:16
+    image: postgres:15-alpine
+    container_name: postgres
     environment:
-      POSTGRES_DB: marketdata
-      POSTGRES_USER: postgres
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-    secrets:
-      - postgres_password
+      POSTGRES_DB_FILE: /run/secrets/postgres_db
     ports:
       - "5432:5432"
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
+    networks:
+      - market-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   premarket:
-    build:
-      context: .
-      dockerfile: services/premarket/Dockerfile
+    build: ./services/premarket
+    container_name: premarket
+    depends_on:
+      - redis
     secrets:
-      - alphavantage_api_key
       - redis_password
-    volumes:
-      - ./input/tickers.txt:/input/tickers.txt
+      - alphavantage_api_key
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      TICKERS_FILE: /input/tickers.txt
+    volumes:
+      - ./input:/input
+    networks:
+      - market-net
 
   pricefetcher:
-    build:
-      context: .
-      dockerfile: services/pricefetcher/Dockerfile
+    build: ./services/pricefetcher
+    container_name: pricefetcher
+    depends_on:
+      - redis
     secrets:
-      - alphavantage_api_key
       - redis_password
+      - alphavantage_api_key
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
+    networks:
+      - market-net
 
   coordinator:
-    build:
-      context: .
-      dockerfile: services/coordinator/Dockerfile
+    build: ./services/coordinator
+    container_name: coordinator
+    depends_on:
+      - redis
     secrets:
       - redis_password
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
+    networks:
+      - market-net
 
   alertdispatcher:
-    build:
-      context: .
-      dockerfile: services/alertdispatcher/Dockerfile
+    build: ./services/alertdispatcher
+    container_name: alertdispatcher
+    depends_on:
+      - redis
     secrets:
       - redis_password
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
+    networks:
+      - market-net
 
 secrets:
-  alphavantage_api_key:
-    file: ./secrets/alphavantage_api_key.txt
   redis_password:
     file: ./secrets/redis_password.txt
+  postgres_user:
+    file: ./secrets/postgres_user.txt
   postgres_password:
     file: ./secrets/postgres_password.txt
+  postgres_db:
+    file: ./secrets/postgres_db.txt
+  alphavantage_api_key:
+    file: ./secrets/alphavantage_api_key.txt
+
+volumes:
+  postgres_data:
+
+networks:
+  market-net:
+    driver: bridge
