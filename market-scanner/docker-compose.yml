@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   redis:
     image: redis:7-alpine
@@ -29,7 +31,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   premarket:
-    build: ./services/premarket
+    build:
+      context: .
+      dockerfile: services/premarket/Dockerfile
     container_name: premarket
     depends_on:
       - redis
@@ -46,7 +50,9 @@ services:
       - market-net
 
   pricefetcher:
-    build: ./services/pricefetcher
+    build:
+      context: .
+      dockerfile: services/pricefetcher/Dockerfile
     container_name: pricefetcher
     depends_on:
       - redis
@@ -60,7 +66,9 @@ services:
       - market-net
 
   coordinator:
-    build: ./services/coordinator
+    build:
+      context: .
+      dockerfile: services/coordinator/Dockerfile
     container_name: coordinator
     depends_on:
       - redis
@@ -73,7 +81,9 @@ services:
       - market-net
 
   alertdispatcher:
-    build: ./services/alertdispatcher
+    build:
+      context: .
+      dockerfile: services/alertdispatcher/Dockerfile
     container_name: alertdispatcher
     depends_on:
       - redis

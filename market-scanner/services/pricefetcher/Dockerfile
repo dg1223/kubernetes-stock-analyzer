@@ -7,14 +7,14 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 
 # install dependencies
-COPY requirements.txt .
+COPY services/pricefetcher/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # copy app
-COPY app.py .
+COPY services/pricefetcher/app.py .
 
 # copy shared library
-COPY ../../shared ./shared
+COPY shared ./shared
 
 # use entrypoint
 CMD ["python", "app.py"]
