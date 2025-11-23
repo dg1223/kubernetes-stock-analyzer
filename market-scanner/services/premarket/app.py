@@ -28,6 +28,7 @@ def load_tickers(path=TICKERS_FILE):
     with open(path) as f:
         return [t.strip() for t in f if t.strip()]
 
+
 # fetch quote from alphavantage
 def fetch_global_quote(symbol, client):
     params = {
@@ -35,11 +36,14 @@ def fetch_global_quote(symbol, client):
         "symbol": symbol,
         "apikey": API_KEY,
     }
+    
     resp = client.get(ALPHAVANTAGE_URL, params=params)
     data = resp.json()
+    
     if "Note" in data:
         raise RuntimeError("ALPHAVANTAGE_RATE_LIMIT")
     g = data.get("Global Quote", {})
+    
     try:
         price = float(g.get("05. price") or 0.0)
         prev = float(g.get("08. previous close") or 0.0)
@@ -47,9 +51,11 @@ def fetch_global_quote(symbol, client):
     except:
         return None
 
+
 # store previous close in redis
 def store_prev_close(symbol, prev):
     r.set(f"prev_close:{symbol}", json.dumps({"prev_close": prev}), ex=36*3600)
+
 
 # main premarket loader
 def main():
