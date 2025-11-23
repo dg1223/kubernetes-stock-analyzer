@@ -12,7 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # copy app
 COPY app.py .
-COPY tickers.txt
 
 # use entrypoint
 CMD ['python', 'app.py']
