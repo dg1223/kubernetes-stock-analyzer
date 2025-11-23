@@ -19,7 +19,9 @@ services:
       - "5432:5432"
 
   premarket:
-    build: ./services/premarket
+    build:
+      context: .
+      dockerfile: services/premarket/Dockerfile
     secrets:
       - alphavantage_api_key
       - redis_password
@@ -30,7 +32,9 @@ services:
       REDIS_PORT: 6379
 
   pricefetcher:
-    build: ./services/pricefetcher
+    build:
+      context: .
+      dockerfile: services/pricefetcher/Dockerfile
     secrets:
       - alphavantage_api_key
       - redis_password
@@ -39,7 +43,9 @@ services:
       REDIS_PORT: 6379
 
   coordinator:
-    build: ./services/coordinator
+    build:
+      context: .
+      dockerfile: services/coordinator/Dockerfile
     secrets:
       - redis_password
     environment:
@@ -47,7 +53,9 @@ services:
       REDIS_PORT: 6379
 
   alertdispatcher:
-    build: ./services/alertdispatcher
+    build:
+      context: .
+      dockerfile: services/alertdispatcher/Dockerfile
     secrets:
       - redis_password
     environment:
