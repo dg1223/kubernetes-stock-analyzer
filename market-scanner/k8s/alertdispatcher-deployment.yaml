@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: alertdispatcher
-          image: market-scanner/alertdispatcher:latest
+          image: market-scanner-alertdispatcher:latest
           env:
             - name: REDIS_HOST
               value: redis

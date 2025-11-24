@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: coordinator
-          image: market-scanner/coordinator:latest
+          image: market-scanner-coordinator:latest
           env:
             - name: REDIS_HOST
               value: redis

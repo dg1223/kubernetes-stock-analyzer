@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: premarket
-          image: market-scanner/premarket:latest
+          image: market-scanner-premarket:latest
           env:
             - name: REDIS_HOST
               value: redis
