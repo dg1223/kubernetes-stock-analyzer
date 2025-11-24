@@ -11,7 +11,7 @@ REDIS_PASSWORD = load_secret("/run/secrets/redis_password")
 redis_client = redis.Redis(
     host=os.getenv("REDIS_HOST", "redis"),
     port=6379,
-    password=REDIS_PASSWORD,
+    # password=REDIS_PASSWORD,
     decode_responses=True
 )
 

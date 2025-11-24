@@ -1,5 +1,6 @@
 import os
 import json
+import redis
 from shared.secrets import read_secret
 from shared.utils import connect_redis
 
@@ -8,7 +9,14 @@ REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 DROP_THRESHOLD = float(os.getenv("DROP_THRESHOLD", 3.0))
 
-r = connect_redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+# r = connect_redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+
+r = redis.Redis(
+    host=os.getenv("REDIS_HOST", "redis"),
+    port=6379,
+    # password=REDIS_PASSWORD,
+    decode_responses=True
+)
 
 def main():
     quotes = r.hgetall("quotes")
