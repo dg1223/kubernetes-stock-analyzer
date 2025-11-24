@@ -14,9 +14,10 @@ spec:
     spec:
       containers:
         - name: alertdispatcher
-          image: market-scanner-alertdispatcher:latest
+          image: dg1223/market-scanner-alertdispatcher:latest
+          imagePullPolicy: Always   # force pull latest image
           env:
-            - name: REDIS_HOST
+            - name: APP_REDIS_HOST
               value: redis
-            - name: REDIS_PORT
+            - name: APP_REDIS_PORT
               value: "6379"

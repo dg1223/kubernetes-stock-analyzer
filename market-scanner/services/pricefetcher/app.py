@@ -6,18 +6,17 @@ from shared.secrets import read_secret
 from shared.alphavantage import fetch_global_quote
 from shared.utils import connect_redis
 
-REDIS_PASSWORD = read_secret("redis_password")
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
-REQUESTS_PER_MIN = int(os.getenv("REQUESTS_PER_MIN", "5"))
-BATCH_SLEEP_SECONDS = int(os.getenv("BATCH_SLEEP_SECONDS", "60"))
+# REDIS_PASSWORD = read_secret("redis_password")
+REDIS_HOST = os.getenv("APP_REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("APP_REDIS_PORT", 6379))
+REQUESTS_PER_MIN = int(os.getenv("REQUESTS_PER_MIN", 5))
+BATCH_SLEEP_SECONDS = int(os.getenv("BATCH_SLEEP_SECONDS", 60))
 
 # r = connect_redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
 
 r = redis.Redis(
-    host=os.getenv("REDIS_HOST", "redis"),
-    port=6379,
-    # password=REDIS_PASSWORD,
+    host=REDIS_HOST,
+    port=REDIS_PORT,
     decode_responses=True
 )
 

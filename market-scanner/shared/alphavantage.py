@@ -1,7 +1,7 @@
 import httpx
 from shared.secrets import read_secret
 
-API_KEY = read_secret("alphavantage_api_key")
+ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 ALPHAVANTAGE_URL = "https://www.alphavantage.co/query"
 
 def fetch_global_quote(symbol, client=None):
@@ -14,7 +14,7 @@ def fetch_global_quote(symbol, client=None):
         client = httpx.Client()
         close_client = True
 
-    params = {"function": "GLOBAL_QUOTE", "symbol": symbol, "apikey": API_KEY}
+    params = {"function": "GLOBAL_QUOTE", "symbol": symbol, "apikey": ALPHAVANTAGE_API_KEY}
     resp = client.get(ALPHAVANTAGE_URL, params=params)
     data = resp.json()
 

@@ -14,11 +14,12 @@ spec:
     spec:
       containers:
         - name: pricefetcher
-          image: market-scanner-pricefetcher:latest
+          image: dg1223/market-scanner-pricefetcher:latest
+          imagePullPolicy: Always   # force pull latest image
           env:
-            - name: REDIS_HOST
+            - name: APP_REDIS_HOST
               value: redis
-            - name: REDIS_PORT
+            - name: APP_REDIS_PORT
               value: "6379"
             - name: ALPHAVANTAGE_API_KEY
               valueFrom:
