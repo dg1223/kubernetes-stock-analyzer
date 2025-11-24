@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pricefetcher
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: pricefetcher
+  template:
+    metadata:
+      labels:
+        app: pricefetcher
+    spec:
+      containers:
+        - name: pricefetcher
+          image: market-scanner/pricefetcher:latest
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: ALPHAVANTAGE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: market-scanner-secrets
+                  key: alphavantage_api_key

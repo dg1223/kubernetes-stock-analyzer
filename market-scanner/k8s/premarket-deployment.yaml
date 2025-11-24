@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: premarket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: premarket
+  template:
+    metadata:
+      labels:
+        app: premarket
+    spec:
+      containers:
+        - name: premarket
+          image: market-scanner/premarket:latest
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: ALPHAVANTAGE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: market-scanner-secrets
+                  key: alphavantage_api_key
